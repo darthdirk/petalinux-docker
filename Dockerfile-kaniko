@@ -1,0 +1,10 @@
+ARG BASE_IMAGE localhost:5000/petalinux-docker:2022.2
+
+FROM gcr.io/kaniko-project/executor:v1.14.0 AS kaniko
+FROM ${BASE_IMAGE}
+
+# Not officially supported but works
+# We need a way to do container builds straight from the petalinux container because
+# the sdk is huge and moving it between github jobs is expensive
+COPY --from=kaniko /kaniko/executor /kaniko/executor
+COPY --from=kaniko /kaniko/.docker /kaniko/.docker
